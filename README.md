@@ -342,3 +342,121 @@ var Enricher = class Enricher {
 };
 
 module.exports.Enricher = Enricher;
+```
+
+#### Examples
+You can find examples in the [midas repository](https://github.com/midas-science). 
+
+Let's assume that we have CSV file that contains a number of IP addresses and we want to find the corresponding geo locations to the IPs
+
+###### Base CSV file
+
+| ip_address      |
+|-----------------|
+| 132.66.7.104    |
+| 125.161.131.190 |
+
+###### Create enricher
+First we have to create an new enricher which calls the API of [ipapi.co](https://ipapi.co/api/#location-of-a-specific-ip).
+Therefore we create a new file called `Ipapi.js` and adapt the `process()` method to call the right API.
+
+```javascript
+"use strict";
+var Ipapi = class Ipapi {
+
+    constructor(rp, inputData, config) {
+        //npm request-promise is used for handling requests
+        //see: https://github.com/request/request-promise
+        this.rp = rp;
+        //loads inputData of the target file specified in the source object path in your config
+        this.inputData = inputData;
+        //loads config for this enrichment
+        this.config = config;
+    }
+
+    getConfig() {
+        return this.config;
+    }
+
+    getName() {
+        return 'Ipapi';
+    }
+
+    setData(inputData) {
+        this.inputData = inputData;
+    }
+
+    process(inputData) {
+
+        if (typeof inputData !== 'undefined' && inputData != null) {
+            this.inputData = inputData;
+        }
+
+        /* ipapi REST API 
+        https://ipapi.co/api/
+        Endpoint
+        GET https://ipapi.co/{ip}/{format}/
+     
+        */
+
+        let req_url = 'https://ipapi.co/' + this.inputData +'/json/';
+        let options = {
+            uri: req_url,
+            headers: {
+                'User-Agent': 'midas'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+
+        return this.rp(options).then((result) => {
+            let _result = [];
+
+            try {
+                delete result.ip;
+                _result = result;
+            } catch (e) {
+                _result = null
+            }
+
+            return Promise.resolve(_result);
+        }).catch((err) => {
+
+            return Promise.resolve('ERROR HAPPENED');
+        });
+
+    }
+};
+
+module.exports.Ipapi = Ipapi;
+```
+
+###### Create enrichment job configuration
+In the next step, we create a new enrichment job either by hand or by using the midas wizard. Based on our input CSV file and the enricher stated above, we create the following enrichment job:
+
+```json
+{
+	"source": {
+		"csv": {
+			"path": "YOUR_PATH/enricher-ipapi/examples/ip-addresses.csv"
+		}
+	},
+	"target": {
+		"csv": {
+			"path": "YOUR_PATH/enricher-ipapi/examples/ip-addresses_enriched.csv"
+		}
+	},
+	"enrichers": [
+		{
+			"name": "Ipapi",
+			"path": "YOUR_PATH/enricher-ipapi",
+			"config": {
+				"input_parameter": "$.*.ip_address",
+				"target_property": "location"
+			}
+		}
+	],
+	"name": "ipapi enrichment"
+}
+```
+
+That's it already. Just start midas by using `midas enrich -c "PATH_TO_THE_CONFIGURATION"
