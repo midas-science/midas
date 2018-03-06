@@ -347,7 +347,7 @@ module.exports.Enricher = Enricher;
 #### Examples
 You can find examples in the [midas repository](https://github.com/midas-science). 
 
-Let's assume that we have CSV file that contains a number of IP addresses and we want to find the corresponding geo locations to the IPs
+Let's assume that we have a CSV file that contains a number of IP addresses and we want to find the corresponding geo locations to the IPs
 
 ###### Base CSV file
 
@@ -358,7 +358,7 @@ Let's assume that we have CSV file that contains a number of IP addresses and we
 
 ###### Create enricher
 First we have to create an new enricher which calls the API of [ipapi.co](https://ipapi.co/api/#location-of-a-specific-ip).
-Therefore we create a new file called `Ipapi.js` and adapt the `process()` method to call the right API.
+Therefore, we create a new file called `Ipapi.js` and adapt the `process()` method to call the right API.
 
 ```javascript
 "use strict";
@@ -459,7 +459,7 @@ In the next step, we create a new enrichment job either by hand or by using the 
 }
 ```
 
-That's it already. Just start midas by using `midas enrich -c "PATH_TO_THE_CONFIGURATION"`
+That's it! Just start midas by using `midas enrich -c "PATH_TO_THE_CONFIGURATION"`
 
 ###### Result
 
