@@ -459,4 +459,11 @@ In the next step, we create a new enrichment job either by hand or by using the 
 }
 ```
 
-That's it already. Just start midas by using `midas enrich -c "PATH_TO_THE_CONFIGURATION"
+That's it already. Just start midas by using `midas enrich -c "PATH_TO_THE_CONFIGURATION"`
+
+###### Result
+
+| ip_address      | city    | ... |
+|-----------------|---------|-----|
+| 132.66.7.104    | Ramat   | ... |
+| 125.161.131.190 | Jakarta | ... |
