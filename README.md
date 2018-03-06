@@ -29,7 +29,7 @@ The extraction and parsing of the data, the handling of the individual API reque
 <a name="gettingstarted"></a>
 ### Getting started
 
-1. Install the `midas` cli via `npm install -g midas-os`
+1. Install the `midas` cli via `npm install -g midas-core`
 
 2. Initialize a new enrichment pipeline via `midas init`
 
