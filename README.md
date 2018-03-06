@@ -7,12 +7,13 @@
 
 #### Navigation
 * Website (https://midas.science)
-* How it works
-* Getting started
-* Pipeline Definition
-* Enricher
+* [How it works](#howitworks)
+* [Getting started](#gettingstarted)
+* [Pipeline Definition](#pipedef)
+* [Enricher](#enrichers)
 * Examples
 
+<a name="howitworks"></a>
 ### How it works
 ![Image](https://i.imgur.com/PXYJAee.png)
 
@@ -25,6 +26,7 @@
 
 The extraction and parsing of the data, the handling of the individual API requests, the format conversion, e.g. from XLSX to JSON, as well as the loading of the data into your target is all handled by **midas**.
 
+<a name="gettingstarted"></a>
 ### Getting started
 
 1. Install the `midas` cli via `npm install -g midas-os`
@@ -60,7 +62,7 @@ var Enricher = class Enricher {
 
 module.exports.Enricher = Enricher;
 ```
-
+<a name="pipedef"></a>
 ### Pipeline Definition
 
 In midas, a pipeline definition is a JSON file containing the name of the pipeline, a source, an optional target and an array of enrichers. 
@@ -165,7 +167,7 @@ The target is useful if you want to convert your source file into another format
         }
     }
 ```
-
+<a name="enrichers"></a>
 #### Enrichers
 Enrichers are JavaScript classes that are responsible for sending data to an external data source, transforming it and and passing it back to the midas core.
 
