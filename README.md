@@ -11,7 +11,7 @@
 * [Getting started](#gettingstarted)
 * [Pipeline Definition](#pipedef)
 * [Enricher](#enrichers)
-* Examples
+* [Examples](#examples)
 
 <a name="howitworks"></a>
 ### How it works
@@ -343,7 +343,7 @@ var Enricher = class Enricher {
 
 module.exports.Enricher = Enricher;
 ```
-
+<a name="#examples"></a>
 #### Examples
 You can find examples in the [midas repository](https://github.com/midas-science). 
 
@@ -430,8 +430,8 @@ var Ipapi = class Ipapi {
 module.exports.Ipapi = Ipapi;
 ```
 
-###### Create enrichment job configuration
-In the next step, we create a new enrichment job either by hand or by using the midas wizard. Based on our input CSV file and the enricher stated above, we create the following enrichment job:
+###### Create an enrichment pipeline configuration
+In the next step, we create a new enrichment pipeline either by hand or by using the midas wizard. Based on our input CSV file and the enricher stated above, we create the following enrichment pipeline configuration:
 
 ```json
 {
