@@ -94,7 +94,7 @@ In midas, a pipeline definition is a JSON file containing the name of the pipeli
 ```
 
 #### Name
-The name of the enrichment pipeline. This can be anything describtive.
+The name of the enrichment pipeline. This can be anything descriptive.
 
 ```json
 "name": "PIPELINE_NAME"
