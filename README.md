@@ -6,7 +6,7 @@
 **midas** is a data enrichment platform that takes away the pain from enriching CSV, JSON and Excel files.
 
 #### Navigation
-* Website (https://midas.science)
+* Website: [https://midas.science](https://www.midas.science)
 * [How it works](#howitworks)
 * [Getting started](#gettingstarted)
 * [Pipeline Definition](#pipedef)
