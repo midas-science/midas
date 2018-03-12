@@ -5,6 +5,7 @@ import object_path from 'object-path';
 import colors from 'colors';
 import RecursiveIterator from 'recursive-iterator';
 import jp from 'jsonpath';
+import RateLimiter from './Utils/RateLimiter';
 
 // Extractors
 import JSONExtractor from './Extractor/JSONExtractor';
@@ -17,6 +18,7 @@ import JSONLoader from './Loader/JSONLoader';
 import CSVLoader from './Loader/CSVLoader';
 import XLSXLoader from './Loader/XLSXLoader';
 // import GoogleSpreadSheetLoader from './Loader/GoogleSpreadSheetLoader';
+
 
 class Midas {
 
@@ -85,9 +87,15 @@ class Midas {
                         parent = jp.parent(data, path_expression);
                         parent[enriched_property_name] = deep_copied_intermediate_result;
                     }
+
+                    // check if there is some kind of rate limit defined within the configuration
+                    if(typeof promise.getConfig().rate_limit !== 'undefined' && typeof promise.getConfig().rate_limit !== 'undefined') {
+                        await RateLimiter.async_stall(promise.getConfig().rate_limit.number_of_requests, promise.getConfig().rate_limit.time_window);
+                    }
                 }
             
             }
+
             return {data: result};
         }
         return chain_enricher_promises(enrichers, self);

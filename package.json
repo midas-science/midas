@@ -1,6 +1,6 @@
 {
-  "name": "midas-os",
-  "version": "0.0.2",
+  "name": "midas-core",
+  "version": "0.0.1",
   "description": "Enrich data with APIs",
   "main": "./distribution/index.js",
   "bin": {
@@ -26,11 +26,12 @@
     "colors": "^1.1.2",
     "command-line-args": "^5.0.2",
     "object-path": "^0.11.4",
-    "prettyjson": "^1.2.1",
-    "unirest": "^0.5.1"
+    "prettyjson": "^1.2.1"
   },
   "dependencies": {
     "camelcase": "^4.1.0",
+    "colors": "^1.1.2",
+    "command-line-args": "^5.0.2",
     "csvjson": "^5.0.0",
     "flat": "^4.0.0",
     "fs-extra": "^5.0.0",
@@ -42,6 +43,8 @@
     "jsonpath": "^1.0.0",
     "load-json-file": "^4.0.0",
     "npm": "^5.7.1",
+    "object-path": "^0.11.4",
+    "prettyjson": "^1.2.1",
     "read-json-sync": "^2.0.0",
     "recursive-iterator": "^3.3.0",
     "request": "^2.83.0",

@@ -1,1 +1,7 @@
+test
+test/*
+test/configs
+test/enrichees/datev_paypal/credentials.json
 source
+.DS_Store
+package-lock.json

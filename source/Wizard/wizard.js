@@ -20,6 +20,7 @@ class Wizard {
 
 	_transform_to_config_object(object) {
 		let config = {source: {}, target:{}, enrichers:[]};
+		let rate_limit = {number_of_requests: -1, time_window: 's'};
 
 		// Source
 		config.name = object.name;
@@ -29,13 +30,24 @@ class Wizard {
 		// Enricher
 		let enricher_name = this._has_custom_enricher(object) ? camelCase(object.custom_enricher) : camelCase(object.enricher);
 
+		// check if rate limit is set
+		if(typeof object.rate_limit !== 'undefined') {
+			let limits = object.rate_limit.split('/');
+
+			if(['s', 'm', 'h'].indexOf(limits[1]) > -1) {
+				rate_limit.number_of_requests = limits[0];
+				rate_limit.time_window = limits[1];
+			}
+		}
+
 		if(object.enricher !== 'no') {
 			config.enrichers = [{
 				name: enricher_name,
 				path: this._resolve_enricher_parent_path(enricher_name),
 				config: {
 					input_parameter: object.source_object_path,
-					target_property: object.target_property_name
+					target_property: object.target_property_name,
+					rate_limit: rate_limit
 				}
 			}];
 		} else {
@@ -44,7 +56,8 @@ class Wizard {
 				path: "ABSOLUTE_PATH_TO_YOUR_ENRICHER",
 				config: {
 					input_parameter: object.source_object_path,
-					target_property: object.target_property_name
+					target_property: object.target_property_name,
+					rate_limit: rate_limit
 				}
 			}];
 		}
@@ -223,7 +236,7 @@ module.exports.Enricher = Enricher;
 						return 'Just try again';
 					}
 					else {
-						return 'JSON Path';
+						return 'Define the JSON path of your input parameter';
 					}
 				},
 				validate: function(value, response) {
@@ -321,6 +334,48 @@ module.exports.Enricher = Enricher;
 			    name: 'target_property_name',
 			    message: "Name of the enriched property?"
 			},
+
+			{
+	      		when: function(response) {
+					return true;
+	      		},
+			    type: 'list',
+			    name: 'rate_limit_yesno',
+			    message: "Do you need rate limiting?",
+			    choices: ['Yes', 'No'],			    
+			    filter: function(val) {
+			    	return val.toLowerCase();
+			    }
+			},
+
+			{
+	      		when: function(response) {
+					return response.rate_limit_yesno === 'yes';
+	      		},
+			    type: 'input',
+			    name: 'rate_limit',
+			    message: "Define your rate limit via NUMBER_OF_REQUESTS/TIME_UNIT (e.g. 100/s would mean midas will make a maximum of 100 requests per second)",
+			    filter: function(val) {
+			    	return val.toLowerCase();
+			    },
+			    validate: function(value, response) {
+			    	let split = value.split('/');
+			    	
+			    	if(split.length != 2) {
+			    		return false;
+			    	}
+
+			    	if(['s', 'm', 'h'].indexOf(split[1]) <= -1) {
+			    		return false;
+			    	}
+
+			    	if(/^\d+$/.test(split[0]) == false) {
+			    		return false;
+			    	}
+
+			    	return true;
+			    }
+			}
 
 		]);
   	
