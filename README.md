@@ -42,6 +42,7 @@ The extraction and parsing of the data, the handling of the individual API reque
 	4. Define the input parameter from your source that you want to the enricher to use via JSONPath. All data that matches your JSON path expression will be passed to the enricher. See http://goessner.net/articles/JsonPath/ for more information.
 	5. (optional) Create a new enricher. An enricher in midas is a JavaScript class that contains the logic to call an external data source. Each enricher must contain a `process(inputData)` method where `inputData` will be a single data point from your source file that you specified earlier via JSON path. Within the enricher class you have access to request-promise via `this.rp` to make API calls. `process(inputData)` must always return a Promise. Just take a look at our examples.
 	6. Chose a name for target property. The result of the Enricher `process()` call will be written here.
+	7. (optional) If your enricher is using an API that limits the number requests per certain time window, you can define the maximum number of request that midas will make within this window. Valid time windows are "s", "m" and "h" (for second, minute and hour).
 	
 5. Start your pipeline via `midas enrich -c "{pipeline_name}_midas.json"`
 
@@ -187,6 +188,34 @@ Enrichers are JavaScript classes that are responsible for sending data to an ext
 ```	
 
 Each enricher requires a name (must be equal to it's filename), a path to it and a configuration that specifies the input parameter from the source and the property name of the target.
+
+###### Throttling and API rate limits
+Most APIs will implement some kind of rate limits, i.e. you are only allowed to make a certain number of requests within a specific time window. midas allows you to configure these limits in a straightforward way and it handles it automatically. Therefore, a special `rate_limit` property can be added to the enrichment configuration.
+
+Basically, `rate_limit` is an object with the two following properties:
+
+| Property           | Possible values                                                  |
+|--------------------|------------------------------------------------------------------|
+| number_of_requests | <ul><li>-1 : Unlimited</li><li>N : Number of requests</li></ul>  |
+| time_window        | <ul><li>s : Second</li><li>m : Minute</li><li>h : Hour</li></ul> |
+
+In the example below, midas will make a maximum of 100 requests per minute.
+```json
+	"enrichers": [
+		{
+			"name": "NAME_OF_YOUR_ENRICHER",
+			"path": "ABSOLUTE_PATH_TO_YOUR_ENRICHER",
+			"config": {
+				"input_parameter": "JSON_PATH_EXPRESSION",
+				"target_property": "TARGET_PROPERTY_NAME",
+				"rate_limit": {
+					"number_of_requests": "100",
+					"time_window": "m"
+				}
+			}
+		}
+	]
+```
 
 ###### Additional Configuration (API Keys etc.)
 Often, APIs require keys to authenticate and authorize requests. The config property of the enricher definition can be used to pass such data. 
