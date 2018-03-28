@@ -1,5 +1,5 @@
 
-![Image](https://i.imgur.com/eggrY7G.png)
+![Image](https://i.imgur.com/QhEPsca.png)
 ![npm](https://img.shields.io/npm/v/npm.svg?style=for-the-badge)
 ![version](https://img.shields.io/badge/version-0.1-blue.svg?Cache=true&style=for-the-badge)
 [<img src="https://i.imgur.com/xID4Ncu.png">](https://discord.gg/zBYnHuN)
