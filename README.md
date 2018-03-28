@@ -6,7 +6,7 @@
 
 With **midas** you can easily build a pipeline that automates the enrichment process of your CSV, JSON and Excel datasets. Use any web API (e.g. OpenWeatherMap, GoogleMaps, CoinMarketCap and more) to add additional information to your existing dataset without you having to worry about stuff like
 
-- **extracting data** from your dataset ,
+- **extracting data** from your dataset,
 - **converting file types** and
 - **rate limiting** of external APIs.
 
