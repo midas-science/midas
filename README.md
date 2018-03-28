@@ -14,11 +14,11 @@ With **midas** you can easily build a pipeline that automates the enrichment pro
 
 ## **Documentation**
 
-[🚀 Getting started](#)
+[🚀 Getting started](https://github.com/midas-science/midas/wiki/Getting-Started)
 
-[🔧 Pipeline Configuration](#)
+[🔧 Pipeline Configuration](https://github.com/midas-science/midas/wiki/Pipeline-Configuration)
 
-[➕ Develop your own Enricher](#)
+[➕ Develop your own Enricher](https://github.com/midas-science/midas/wiki/Develop-your-own-Enricher)
 
 
 
@@ -30,7 +30,7 @@ With **midas** you can easily build a pipeline that automates the enrichment pro
 - [Instagram](https://github.com/midas-science/enricher-instagramlocation)
 - [Clearbit](https://github.com/midas-science/enricher-clearbit)
 - [ipapi](https://github.com/midas-science/enricher-ipapi)
-- Develop your own
+- [Develop your own](https://github.com/midas-science/midas/wiki/Develop-your-own-Enricher)
 
 
 ## **Get in touch**
