@@ -12,11 +12,13 @@ import JSONExtractor from './Extractor/JSONExtractor';
 import CSVExtractor from './Extractor/CSVExtractor';
 import XLSXExtractor from './Extractor/XLSXExtractor';
 import GoogleSpreadSheetExtractor from './Extractor/GoogleSpreadSheetExtractor';
+import MySQLExtractor from './Extractor/MySQLExtractor';
 
 // Loaders
 import JSONLoader from './Loader/JSONLoader';
 import CSVLoader from './Loader/CSVLoader';
 import XLSXLoader from './Loader/XLSXLoader';
+import MySQLLoader from './Loader/MySQLLoader';
 // import GoogleSpreadSheetLoader from './Loader/GoogleSpreadSheetLoader';
 
 
@@ -133,6 +135,10 @@ class Midas {
             return new GoogleSpreadSheetExtractor(this.config);
         }
 
+        if(extractor_type === 'mysql') {
+            return new MySQLExtractor(this.config);
+        }
+
     }
 
     _loader() {
@@ -149,6 +155,11 @@ class Midas {
         if(loader_type == 'xlsx') {
             return new XLSXLoader(this.config);
         }
+
+        if(loader_type == 'mysql') {
+            return new MySQLLoader(this.config);
+        }
+
     }
 
     _extract_data() {
@@ -180,6 +191,61 @@ class Midas {
         });
 
         return result;
+    }
+
+    // TODO
+    stream_touch() {
+        // get the client
+        const mysql = require('mysql2');
+
+        // create the connection to database
+        const conn = mysql.createConnection({
+          host: 'localhost',
+          user: 'root',
+          database: 'midas'
+        });
+
+        let statement = 'SELECT * FROM p42a202ef3eec7cc7bc956653f7335a4';
+
+
+        var keepProcessing = true;
+
+        const done = () => {
+           keepProcessing  = true;
+           conn.close()
+        }
+
+        const query = conn.query(statement)
+            .on('result', (aRow)=>{
+                if (!keepProcessing) {
+                  return; 
+                }
+                if (false) {
+                   done()          
+                }
+                console.log(aRow);
+            })
+            .on('end', ()=>{
+                done()
+            })
+            .on('error', err => {
+                if (!err.isFatal) {
+                   // not a disconnect - logic error like sql syntax etc
+                  done();
+                 }
+                 // for disconnects pool should handle error and remove connection from pool, no need to release()
+             })
+
+
+
+        console.log('stream touch');
+    }
+
+    touch_lol() {
+        let data_promise = this._extract_data();
+        data_promise.then((data) => {
+            console.log(data);
+        })
     }
 
     touch() {
@@ -219,6 +285,7 @@ class Midas {
 
                 let result = this._loader().load(data_set);
                 result.then((res) => {
+                    console.log(res);
                     // LOG
                     this._report_status({message: '\n✅ midas data enrichment process done'.green.bold});
                 });

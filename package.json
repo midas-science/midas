@@ -42,6 +42,7 @@
     "jsonfile": "^4.0.0",
     "jsonpath": "^1.0.0",
     "load-json-file": "^4.0.0",
+    "mysql2": "^1.5.3",
     "npm": "^5.7.1",
     "object-path": "^0.11.4",
     "prettyjson": "^1.2.1",
@@ -49,6 +50,7 @@
     "recursive-iterator": "^3.3.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
+    "sqlstring": "^2.3.1",
     "xlsx": "^0.12.2",
     "xlsx-writestream": "^0.5.1"
   }

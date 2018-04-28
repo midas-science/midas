@@ -18,6 +18,15 @@ const main_definitions = [
 	{ name: 'command', defaultOption: true }  	
 ];
 
+//
+
+console.log('HALLOOOO');
+let midas = new Midas(new Config('/Users/Patrick/Dropbox/Science/midas/midas/test/configs/sql_test.json').get_config_object_sync());
+midas.touch();
+
+//
+
+
 const main_options = command_line_args(main_definitions, { stopAtFirstUnknown: true });
 const argv = main_options._unknown || [];
 
