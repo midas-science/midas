@@ -285,7 +285,6 @@ class Midas {
 
                 let result = this._loader().load(data_set);
                 result.then((res) => {
-                    console.log(res);
                     // LOG
                     this._report_status({message: '\n✅ midas data enrichment process done'.green.bold});
                 });
