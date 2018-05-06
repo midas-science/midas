@@ -21,6 +21,8 @@ import XLSXLoader from './Loader/XLSXLoader';
 import MySQLLoader from './Loader/MySQLLoader';
 // import GoogleSpreadSheetLoader from './Loader/GoogleSpreadSheetLoader';
 
+import flat from 'flat';
+
 
 class Midas {
 
@@ -50,6 +52,8 @@ class Midas {
             for (let promise of promises) {
 
                 let jp_source_data = jp.nodes(data, promise.getConfig().input_parameter);
+                let jp_source_data_2 = jp.nodes(data, '$..price');
+
                 let enriched_property_name = promise.getConfig().target_property;
                 for(let node of jp_source_data) {
 
@@ -193,60 +197,6 @@ class Midas {
         return result;
     }
 
-    // TODO
-    stream_touch() {
-        // get the client
-        const mysql = require('mysql2');
-
-        // create the connection to database
-        const conn = mysql.createConnection({
-          host: 'localhost',
-          user: 'root',
-          database: 'midas'
-        });
-
-        let statement = 'SELECT * FROM p42a202ef3eec7cc7bc956653f7335a4';
-
-
-        var keepProcessing = true;
-
-        const done = () => {
-           keepProcessing  = true;
-           conn.close()
-        }
-
-        const query = conn.query(statement)
-            .on('result', (aRow)=>{
-                if (!keepProcessing) {
-                  return; 
-                }
-                if (false) {
-                   done()          
-                }
-                console.log(aRow);
-            })
-            .on('end', ()=>{
-                done()
-            })
-            .on('error', err => {
-                if (!err.isFatal) {
-                   // not a disconnect - logic error like sql syntax etc
-                  done();
-                 }
-                 // for disconnects pool should handle error and remove connection from pool, no need to release()
-             })
-
-
-
-        console.log('stream touch');
-    }
-
-    touch_lol() {
-        let data_promise = this._extract_data();
-        data_promise.then((data) => {
-            console.log(data);
-        })
-    }
 
     touch() {
 

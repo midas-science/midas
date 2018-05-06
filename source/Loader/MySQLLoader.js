@@ -178,7 +178,7 @@ class MySQLLoader extends Loader {
 
 		// Insert data
 		let insert_statement = `INSERT INTO ${SqlString.escapeId(table_name)}
-								SELECT * FROM ${temporary_table_name}
+								SELECT * FROM ${SqlString.escapeId(temporary_table_name)}
 								ON DUPLICATE KEY UPDATE ${temp_c.map(column => `${column} = VALUES(${column})` ).join(',')};`
 		//console.log(insert_statement);
 		await connection.execute(insert_statement);
