@@ -224,23 +224,25 @@ class Midas {
         this._report_status({message: status_message});           
 
 
-        data_promise.then((data_set) => {
+        return data_promise.then((data_set) => {
 
             data_set = ArrayUtils.arrayify(data_set);
             let enrichers_chain = [];
             let enrichment = enrichers_chain.push(this._chain_enrichers(enrichers, data_set));  
 
-            Promise.all(enrichers_chain)
+            return Promise.all(enrichers_chain)
             .then(enriched_items => {
 
                 let result = this._loader().load(data_set);
-                result.then((res) => {
+                return result.then((res) => {
                     // LOG
                     this._report_status({message: '\n✅ midas data enrichment process done'.green.bold});
+                    return Promise.resolve(true);
                 });
             }).catch((err) => {
                 console.log(err);
                 console.log('Something went wrong'.red);
+                return Promise.resolve(false);
             }); 
         });
         // end of function

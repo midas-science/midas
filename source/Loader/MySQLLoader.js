@@ -4,7 +4,6 @@ import SqlString from 'sqlstring';
 import mysql from 'mysql2/promise';
 import crypto from 'crypto';
 
-import csvjson from 'csvjson';
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -156,7 +155,6 @@ class MySQLLoader extends Loader {
 		let file_path = await this._write_data_to_csv(data);
 		let column_names = await this._get_column_names_from_table(this.config._target.database, table_name);
 
-
 		// Load data infile
 		let temp_c = [...column_names].map(column => '`' + this._escape_column_name(column) + '`');
 		let no_id = '';
@@ -169,8 +167,9 @@ class MySQLLoader extends Loader {
 
 		//temp_c.splice(1,1);
 		let infile_statement = `LOAD DATA LOCAL INFILE '${file_path}' INTO TABLE ${SqlString.escapeId(temporary_table_name)}
-								  FIELDS TERMINATED BY ','
-								  LINES TERMINATED BY '\n'
+									FIELDS TERMINATED BY ','
+									OPTIONALLY ENCLOSED BY '"'
+									LINES TERMINATED BY '\r\n'
 								  IGNORE 1 LINES
 								  (${temp_c.join(',')})
 								  ${no_id}`;
@@ -180,7 +179,6 @@ class MySQLLoader extends Loader {
 		let insert_statement = `INSERT INTO ${SqlString.escapeId(table_name)}
 								SELECT * FROM ${SqlString.escapeId(temporary_table_name)}
 								ON DUPLICATE KEY UPDATE ${temp_c.map(column => `${column} = VALUES(${column})` ).join(',')};`
-		//console.log(insert_statement);
 		await connection.execute(insert_statement);
 
 		// Drop temporary table
@@ -195,21 +193,19 @@ class MySQLLoader extends Loader {
 	}
 
 	async _write_data_to_csv(data) {
-		let options = {
-		    delimiter   : ',',
-		    wrap        : false
-		};
 
-    	let data_string = csvjson.toCSV(data, options);
-
-		let random_hash = crypto.createHmac('sha256', crypto.randomBytes(32)
-	    .toString('hex') + '')
-	    .digest('hex');
-	    let file_path = __dirname + path.sep + 'TEMP_MIDAS_TABLE_FILE__' + random_hash;
-
-        let result = await fs.outputFile(file_path, data_string);
-
-        return file_path;
+		const json2csv = require('json2csv').parse;
+		try {
+		  	const data_string = json2csv(data, {flatten:true, eol:'\r\n'});
+			let random_hash = crypto.createHmac('sha256', crypto.randomBytes(32)
+			.toString('hex') + '')
+			.digest('hex');
+			let file_path = __dirname + path.sep + 'TEMP_MIDAS_TABLE_FILE__' + random_hash;
+			let result = await fs.outputFile(file_path, data_string);
+			return file_path;
+		} catch (err) {
+			return Promise.resolve(err);
+		}
 	} 
 
     async load(data) {
